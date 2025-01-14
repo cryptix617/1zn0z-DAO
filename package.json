@@ -1,0 +1,23 @@
+{
+  "name": "1zn0z-dao",
+  "version": "1.0.0",
+  "description": "Decentralized Community DAO Token Launcher",
+  "main": "index.js",
+  "scripts": {
+    "test": "hardhat test",
+    "compile": "hardhat compile",
+    "deploy": "hardhat run scripts/deploy.js"
+  },
+  "keywords": ["blockchain", "dao", "ethereum", "solidity"],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+    "hardhat": "^2.14.0",
+    "solidity-coverage": "^0.8.2"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.2",
+    "ethers": "^5.7.2"
+  }
+}

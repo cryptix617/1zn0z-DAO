@@ -1,0 +1,93 @@
+name: Smart Contract Deployment
+
+on:
+  push:
+    branches: 
+      - main
+      - develop
+  pull_request:
+    branches: 
+      - main
+      - develop
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Compile contracts
+      run: npx hardhat compile
+    
+    - name: Run tests
+      run: npx hardhat test
+
+  deploy-testnet:
+    needs: test
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Deploy to Sepolia Testnet
+      env:
+        SEPOLIA_WALLET_ADDRESS: ${{ secrets.SEPOLIA_WALLET_ADDRESS }}
+        SEPOLIA_PRIVATE_KEY: ${{ secrets.SEPOLIA_PRIVATE_KEY }}
+        INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
+        REACT_APP_INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
+      run: |
+        echo "Deploying to Sepolia Testnet with wallet: $SEPOLIA_WALLET_ADDRESS"
+        npx hardhat run scripts/deploy.js --network sepolia
+    
+    - name: Archive deployment artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: sepolia-deployments
+        path: deployments/sepolia/
+
+  deploy-mainnet:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    
+    - name: Install dependencies
+      run: npm install
+    
+    - name: Deploy to Ethereum Mainnet
+      env:
+        MAINNET_WALLET_ADDRESS: ${{ secrets.MAINNET_WALLET_ADDRESS }}
+        ETHEREUM_PRIVATE_KEY: ${{ secrets.MAINNET_PRIVATE_KEY }}
+        INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
+        REACT_APP_INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
+      run: |
+        echo "Deploying to Ethereum Mainnet with wallet: $MAINNET_WALLET_ADDRESS"
+        npx hardhat run scripts/deploy.js --network mainnet
+    
+    - name: Archive deployment artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: mainnet-deployments
+        path: deployments/mainnet/
