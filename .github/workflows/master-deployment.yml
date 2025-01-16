@@ -1,0 +1,64 @@
+name: 1zn0z DAO Deployment Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Slither Static Analysis
+        uses: crytic/slither-action@v0.1.1
+
+  build-and-test:
+    needs: security-scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install Dependencies
+        run: npm ci
+      
+      - name: Compile Contracts
+        run: npx hardhat compile
+      
+      - name: Verify Contract Compilation
+        run: |
+          # Check if all contract artifacts are generated
+          ls -l artifacts/contracts/
+          # Optional: Add more detailed checks
+
+      - name: Run Unit Tests
+        run: npx hardhat test
+
+  deployment:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    environment: 
+      name: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Deploy to Sepolia Testnet
+        if: github.ref == 'refs/heads/develop'
+        env:
+          SEPOLIA_WALLET_ADDRESS: ${{ secrets.SEPOLIA_WALLET_ADDRESS }}
+          SEPOLIA_PRIVATE_KEY: ${{ secrets.SEPOLIA_PRIVATE_KEY }}
+          INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
+        run: npx hardhat run scripts/deploy.js --network sepolia
+
+      - name: Deploy to Mainnet
+        if: github.ref == 'refs/heads/main'
+        env:
+          MAINNET_WALLET_ADDRESS: ${{ secrets.MAINNET_WALLET_ADDRESS }}
+          MAINNET_PRIVATE_KEY: ${{ secrets.MAINNET_PRIVATE_KEY }}
+          INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
+        run: npx hardhat run scripts/deploy.js --network mainnet

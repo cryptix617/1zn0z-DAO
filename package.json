@@ -1,23 +1,92 @@
 {
   "name": "1zn0z-dao",
   "version": "1.0.0",
-  "description": "Decentralized Community DAO Token Launcher",
+  "private": true,
+  "description": "1zn0z Decentralized Autonomous Organization",
   "main": "index.js",
   "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
     "test": "hardhat test",
     "compile": "hardhat compile",
-    "deploy": "hardhat run scripts/deploy.js"
+    "deploy:sepolia": "hardhat run scripts/deploy.js --network sepolia",
+    "deploy:contribution-tracker": "hardhat run scripts/deploy-contribution-tracker.js --network sepolia",
+    "deploy:dao-engine": "hardhat run scripts/deploy-dao-engine.js --network sepolia",
+    "generate:contracts": "node scripts/generate-contract-json.js",
+    "prepare": "husky install",
+    "predeploy": "npm run build",
+    "export": "next export"
   },
-  "keywords": ["blockchain", "dao", "ethereum", "solidity"],
-  "author": "Your Name",
+  "keywords": [
+    "blockchain",
+    "dao",
+    "web3"
+  ],
+  "author": "1zn0z Team",
   "license": "MIT",
-  "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
-    "hardhat": "^2.14.0",
-    "solidity-coverage": "^0.8.2"
-  },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.9.2",
-    "ethers": "^5.7.2"
+    "@metamask/sdk-react": "latest",
+    "@openzeppelin/contracts": "^4.9.3",
+    "@typechain/ethers-v6": "^0.5.1",
+    "crypto-browserify": "^3.12.1",
+    "ethers": "^5.7.2",
+    "next": "^14.0.3",
+    "openzeppelin-solidity": "^3.4.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "stream-browserify": "^3.0.0"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.8",
+    "@nomicfoundation/hardhat-ethers": "^3.0.0",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.12",
+    "@nomicfoundation/hardhat-toolbox": "^2.0.2",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@nomiclabs/hardhat-etherscan": "^3.1.8",
+    "@typechain/ethers-v5": "^11.1.2",
+    "@typechain/hardhat": "^9.1.0",
+    "@types/chai": "^5.0.1",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20.9.0",
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
+    "autoprefixer": "^10.4.20",
+    "chai": "^5.1.2",
+    "dotenv": "^16.3.1",
+    "hardhat": "^2.14.0",
+    "hardhat-gas-reporter": "^2.2.2",
+    "husky": "^8.0.3",
+    "postcss": "^8.5.1",
+    "solidity-coverage": "^0.8.14",
+    "tailwindcss": "^3.4.17",
+    "ts-node": "^10.9.2",
+    "typechain": "^8.3.2",
+    "typescript": "^5.2.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint",
+      "pre-push": "npm run test"
+    }
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

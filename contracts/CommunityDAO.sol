@@ -298,7 +298,7 @@ contract CommunityDAO is Ownable {
             redeemableAmount = stake.amount + bonus;
             
             // Cap at 150% of original stake
-            redeemableAmount = Math.min(
+            redeemableAmount = min(
                 redeemableAmount, 
                 (stake.amount * MAX_REDEMPTION_MULTIPLIER) / 100
             );

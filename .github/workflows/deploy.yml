@@ -1,93 +1,66 @@
-name: Smart Contract Deployment
+name: DAO Deployment Pipeline
 
 on:
   push:
-    branches: 
+    branches:
       - main
       - develop
   pull_request:
-    branches: 
+    branches:
       - main
-      - develop
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Use Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-    
-    - name: Install dependencies
-      run: npm install
-    
-    - name: Compile contracts
-      run: npx hardhat compile
-    
-    - name: Run tests
-      run: npx hardhat test
+      - uses: actions/checkout@v3
+      
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Install Dependencies
+        run: npm ci
+      
+      - name: Compile Contracts
+        run: npx hardhat compile
+      
+      - name: Run Tests
+        run: npx hardhat test
 
-  deploy-testnet:
-    needs: test
-    if: github.ref == 'refs/heads/develop'
+  deploy:
+    needs: build
     runs-on: ubuntu-latest
+    environment: 
+      name: ${{ github.ref == 'refs/heads/main' && 'production' || 'staging' }}
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Use Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-    
-    - name: Install dependencies
-      run: npm install
-    
-    - name: Deploy to Sepolia Testnet
-      env:
-        SEPOLIA_WALLET_ADDRESS: ${{ secrets.SEPOLIA_WALLET_ADDRESS }}
-        SEPOLIA_PRIVATE_KEY: ${{ secrets.SEPOLIA_PRIVATE_KEY }}
-        INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
-        REACT_APP_INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
-      run: |
-        echo "Deploying to Sepolia Testnet with wallet: $SEPOLIA_WALLET_ADDRESS"
-        npx hardhat run scripts/deploy.js --network sepolia
-    
-    - name: Archive deployment artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: sepolia-deployments
-        path: deployments/sepolia/
+      - uses: actions/checkout@v3
+      
+      - name: Deploy to Sepolia
+        if: github.ref == 'refs/heads/develop'
+        env:
+          SEPOLIA_WALLET_ADDRESS: ${{ secrets.SEPOLIA_WALLET_ADDRESS }}
+          SEPOLIA_PRIVATE_KEY: ${{ secrets.SEPOLIA_PRIVATE_KEY }}
+          INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
+        run: npx hardhat run scripts/deploy.js --network sepolia
 
-  deploy-mainnet:
-    needs: test
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Use Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-    
-    - name: Install dependencies
-      run: npm install
-    
-    - name: Deploy to Ethereum Mainnet
-      env:
-        MAINNET_WALLET_ADDRESS: ${{ secrets.MAINNET_WALLET_ADDRESS }}
-        ETHEREUM_PRIVATE_KEY: ${{ secrets.MAINNET_PRIVATE_KEY }}
-        INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
-        REACT_APP_INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
-      run: |
-        echo "Deploying to Ethereum Mainnet with wallet: $MAINNET_WALLET_ADDRESS"
-        npx hardhat run scripts/deploy.js --network mainnet
-    
-    - name: Archive deployment artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: mainnet-deployments
-        path: deployments/mainnet/
+      - name: Deploy to Mainnet
+        if: github.ref == 'refs/heads/main'
+        env:
+          MAINNET_WALLET_ADDRESS: ${{ secrets.MAINNET_WALLET_ADDRESS }}
+          MAINNET_PRIVATE_KEY: ${{ secrets.MAINNET_PRIVATE_KEY }}
+          INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
+        run: npx hardhat run scripts/deploy.js --network mainnet
+
+      - name: Build Static Site
+        run: npm run build
+      
+      - name: Export Static Site
+        run: npm run export
+      
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out

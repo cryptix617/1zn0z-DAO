@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 14, 23, 42;
+  --background-end-rgb: 14, 23, 42;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-start-rgb))
+    )
+    rgb(var(--background-end-rgb));
+}
+
+@layer components {
+  .dao-card {
+    @apply bg-brand-surface text-brand-text shadow-dao-card rounded-dao-card p-6 transition-all duration-300 hover:shadow-dao-elevated;
+  }
+
+  .dao-button {
+    @apply px-6 py-3 rounded-lg text-white font-semibold transition-colors duration-200 
+           bg-brand-primary hover:bg-brand-accent focus:outline-none focus:ring-2 
+           focus:ring-brand-highlight focus:ring-opacity-50;
+  }
+
+  .dao-input {
+    @apply w-full px-4 py-3 bg-brand-surface border border-brand-surface 
+           text-brand-text rounded-lg focus:outline-none focus:ring-2 
+           focus:ring-brand-accent focus:border-transparent;
+  }
+
+  .dao-section {
+    @apply bg-brand-surface rounded-xl p-8 shadow-dao-card;
+  }
+}
+
+/* Glassmorphism-inspired effects */
+.glassmorphic {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}

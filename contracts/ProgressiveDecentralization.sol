@@ -28,8 +28,8 @@ contract ProgressiveDecentralization is Ownable {
     mapping(address => GovernanceRights) public governanceRights;
 
     // Decentralization Milestones
-    uint256 public constant DECENTRALIZATION_THRESHOLD_1 = 1000 unique token holders;
-    uint256 public constant DECENTRALIZATION_THRESHOLD_2 = 5000 unique token holders;
+    uint256 public constant DECENTRALIZATION_THRESHOLD_1 = 1000; // unique token holders
+    uint256 public constant DECENTRALIZATION_THRESHOLD_2 = 5000; // unique token holders
 
     // Governance Token
     IERC20 public governanceToken;

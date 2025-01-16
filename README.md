@@ -1,67 +1,75 @@
-# 1zn0z Smart Contract Suite
+# 1zn0z DAO: Decentralized Collaboration Platform
 
 ## Overview
-This project contains a suite of smart contracts for the 1zn0z ecosystem, including Token, DAO, Contributor Pool, and Progressive Decentralization contracts.
+1zn0z DAO is a cutting-edge decentralized autonomous organization (DAO) platform designed to revolutionize collaborative work through blockchain technology.
 
-## Prerequisites
-- Node.js (v18+)
-- npm or yarn
-- Hardhat
+## Key Features
+- 🌐 Blockchain-powered governance
+- 💡 Contribution tracking and rewards
+- 🤝 Transparent proposal and voting system
 
-## Setup
+## Technology Stack
+- **Blockchain**: Solidity Smart Contracts
+- **Frontend**: Next.js 14
+- **Web3 Integration**: Ethers.js
+- **Styling**: Tailwind CSS
+
+## Smart Contracts
+- `DAOEngine.sol`: Core governance and coordination contract
+- `ContributionTracker.sol`: Track and reward contributions
+- `1zn0zToken.sol`: Native governance token
+
+## Getting Started
+
+### Prerequisites
+- Node.js 18+
+- MetaMask Browser Extension
+- Sepolia Testnet ETH
+
+### Installation
 1. Clone the repository
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Copy `.env.example` to `.env` and fill in your credentials
-
-## Deployment
-
-### Local Development
 ```bash
-npx hardhat node  # Start local blockchain
-npx hardhat run scripts/deploy.js --network localhost
+git clone https://github.com/yourusername/1zn0z-dao.git
+cd 1zn0z-dao
 ```
 
-### Testnet Deployment
+2. Install dependencies
 ```bash
-npx hardhat run scripts/deploy.js --network sepolia
+npm install
 ```
 
-### Mainnet Deployment
+3. Set up environment variables
 ```bash
-npx hardhat run scripts/deploy.js --network mainnet
+cp .env.example .env
+# Fill in your Sepolia network details
 ```
 
-## Continuous Deployment
-This project uses GitHub Actions for automated deployment:
-- Pushes to `develop` branch deploy to Sepolia testnet
-- Pushes to `main` branch deploy to Ethereum mainnet
+4. Compile Smart Contracts
+```bash
+npx hardhat compile
+```
 
-## Environment Variables
-- `ETHEREUM_PRIVATE_KEY`: Your Ethereum wallet private key
-- `INFURA_PROJECT_ID`: Infura project ID for network access
-- `ETHERSCAN_API_KEY`: Optional, for contract verification
+5. Deploy Contracts
+```bash
+npm run deploy:sepolia
+```
 
-## Security
-- Never commit private keys
-- Use hardware wallets for mainnet deployments
-- Rotate keys regularly
+6. Start Development Server
+```bash
+npm run dev
+```
 
 ## Contributing
 1. Fork the repository
-2. Create a feature branch
+2. Create your feature branch
 3. Commit your changes
-4. Push and create a Pull Request
+4. Push to the branch
+5. Create a Pull Request
 
 ## License
 MIT License
 
-## Disclaimer
-Cryptocurrency investments carry inherent risks. Participate responsibly.
-
-## Contact & Community
-- Discord: [Your Discord Link]
-- Twitter: [Your Twitter Handle]
-- Email: [Your Contact Email]
+## Contact
+- Project Website: [Your Website]
+- Email: contact@1zn0z.com
+- Twitter: [@1zn0zDAO]

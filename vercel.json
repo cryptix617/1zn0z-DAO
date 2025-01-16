@@ -1,0 +1,14 @@
+{
+    "version": 2,
+    "builds": [
+        { "src": "next.config.js", "use": "@vercel/next" }
+    ],
+    "routes": [
+        { "src": "/(.*)", "dest": "/" }
+    ],
+    "env": {
+        "NEXT_PUBLIC_DAO_ENGINE_CONTRACT": "@dao_engine_contract",
+        "NEXT_PUBLIC_CONTRIBUTION_TRACKER_CONTRACT": "@contribution_tracker_contract",
+        "NEXT_PUBLIC_NETWORK_ID": "@network_id"
+    }
+}
